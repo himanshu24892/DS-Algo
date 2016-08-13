@@ -1,57 +1,75 @@
 import java.util.*;
 
 class FibMatrixLog2n{
-	public static void  /*int[][]*/ powOfMatrix(int a[][],String n){
-		// int y[][]={{1,0},{0,1}};
-		// while(!n.equals("0")){
-		// 	if(n % 2 == 1){
-		// 		y = matrixMutiply(y,a);
-		// 	}
-		// 	a = matrixMutiply(a,a);
-		// 	n = divideBy2(n);
-		// }
+	public static int powOfMatrix(int[][] a,String n){
+		long startTime = System.currentTimeMillis();
+		int y[][]={{1,0},{0,1}};
+		while(!n.equals("0")){
+			if(Integer.parseInt(n.charAt(n.length() - 1) + "") % 2 == 1){
+				y = matrixMultiply(y,a);
+			}
+			a = matrixMultiply(a,a);
+			n = divideBy2(n);
+			//System.out.println(n);
+		}
+		long endTime = System.currentTimeMillis();
+		System.out.println(endTime - startTime + " ms");
+		return y[1][0];
 	}
-	public static void matricMultiply(int[][] a, int b[][]){
-		// int c[][] = new int[2][2];
-		// for(int i = 0; i < 2; i++){
-		// 	for(int j = 0; j < 2; j++){
-		// 		int sum = 0;
-		// 		for(int k = 0;k < 2; k++){
-		// 			sum = sum + a[i][k] * b[k][j];
-		// 		}
+	public static int[][] matrixMultiply(int[][] a, int b[][]){
+		int c[][] = new int[2][2];
+		for(int i = 0; i < 2; i++){
+			for(int j = 0; j < 2; j++){
+				int sum = 0;
+				for(int k = 0;k < 2; k++){
+					sum = sum + a[i][k] * b[k][j];
+				}
 
-		// 		c[i][j] = sum;
-		// 	}
-		// }
+				c[i][j] = sum % 100;
+			}
+		}
+		return c;
 	}
 	public static String divideBy2(String n){
 		String ans = "";
 		String prev = "";
-		for(int i = 0; i < n.length(); i++){
-			if(Integer.parseInt(n.charAt(i) + "") == 0){
-				// System.out.println("yes");
-				if(ans.equals("")){
-					continue;
-				}
-				else if(!prev.equals("")){
-					prev = prev + n.charAt(i);
+		boolean fl = false;
+		if(n.equals("1") || n.equals("0")){
+			return "0";
+		}
+		for(int i = 0;i < n.length(); i++){
+			if(n.charAt(i) == '0'){
+				if(prev.equals("")){
+					if(!ans.equals("")){
+						ans = ans + n.charAt(i);
+					}
 				}
 				else{
-					ans = ans + 0;
+					prev = prev +n.charAt(i);
+					fl = true;
 				}
+
 			}
-			else if(Integer.parseInt(n.charAt(i) + "") < 2){
+			else if(n.charAt(i) == '1'){
 				if(prev.equals("")){
+					if(!ans.equals("")){
+						ans = ans + '0';
+						prev = prev + n.charAt(i);
+					}
+					else{
+						prev = prev + n.charAt(i);
+					}
+				}
+				else{
 					prev = prev + n.charAt(i);
-				}else{
-					continue;
+					fl = true;
 				}
 			}
 			else{
-					prev = prev + n.charAt(i);
+				prev = prev + n.charAt(i);
+				fl =true;
 			}
-			if(!prev.equals("")){
-				//System.out.println("prev: " + prev);
+			if(fl){
 				ans = ans + (Integer.parseInt(prev)/2);
 				if(Integer.parseInt(prev) % 2 != 0){
 					prev = Integer.parseInt(prev) % 2 + "";
@@ -59,14 +77,16 @@ class FibMatrixLog2n{
 				else{
 					prev = "";
 				}
+				fl = false;
 			}
 		}
 		return ans;
 	}
 	public static void main(String[] args) {
-		System.out.println("1. " + divideBy2("112"));
-		System.out.println("2. " + divideBy2("100002"));
-		System.out.println("3. " + divideBy2("1012"));
-		System.out.println("4. " + divideBy2("01012"));
+		Scanner in = new Scanner(System.in);
+		int[][] a = {{1,1},{1,0}};
+		while(true){
+			System.out.println(powOfMatrix(a,in.next()));
+		}
 	}
 }
